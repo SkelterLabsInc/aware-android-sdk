@@ -1,0 +1,11 @@
+<resources>
+  <string name="app_name">ConnectFcm</string>
+
+  <string name="is_registered" translatable="false">AIQAware is registered</string>
+  <string name="is_not_registered" translatable="false">AIQAware is not registered yet</string>
+  <string name="btn_register" translatable="false">Register</string>
+  <string name="btn_unregister" translatable="false">Unregister</string>
+  <string name="is_service_enabled" translatable="false">AIQAware collector service is enabled</string>
+  <string name="is_service_disabled" translatable="false">AIQAware collector service is disabled</string>
+  <string name="btn_toggle_service" translatable="false">Toggle service</string>
+</resources>
