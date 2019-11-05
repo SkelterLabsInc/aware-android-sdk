@@ -18,11 +18,17 @@ class FcmMessagingService : FirebaseMessagingService() {
 
   override fun onMessageReceived(remoteMessage: RemoteMessage) {
     if (aiqAware.handleAiqAwareFcmMessage(remoteMessage)) {
-      Handler(Looper.getMainLooper()).post {
-        application.toast("AWARE message handled")
-      }
+      toast("AWARE message handled")
       return
     }
+
     // Handle client message.
+    toast("onMessageReceived")
+  }
+
+  private fun toast(message: String) {
+    Handler(Looper.getMainLooper()).post {
+      application.toast(message)
+    }
   }
 }

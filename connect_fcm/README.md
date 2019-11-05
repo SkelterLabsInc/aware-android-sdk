@@ -1,8 +1,20 @@
 # Sample application with FCM settings
 
-This is sample application which has client Firebase Cloud Messaging settings.
+Refer to this application when you need to get your own FCM message and use AIQ.AWARE SDK at the same time.
 
-You need to set your own google-services.json file to test this sample application.
+# How to run this sample
 
-See [Download Firebase config file or object](https://support.google.com/firebase/answer/7015592?hl=en)
-for more details.
+To run with this sample, You need to do following steps:
+
+1. Clone this project.
+
+2. Go to [firebase console](https://console.firebase.google.com/u/2/) and make your own project for
+this app.
+
+3. Register new Android app with package name `com.skelterlabs.aware.example.fcm`.
+
+4. Download `google-services.json` into this project.
+
+5. Test your own message with [Firebase Cloud Messaging document](https://firebase.google.com/docs/cloud-messaging/http-server-ref)
+
+
