@@ -91,6 +91,7 @@ class MainActivity : AppCompatActivity() {
       Manifest.permission.BLUETOOTH,
       Manifest.permission.READ_CALENDAR,
       Manifest.permission.ACCESS_FINE_LOCATION,
+      Manifest.permission.CHANGE_WIFI_STATE,
       Manifest.permission.ACCESS_WIFI_STATE
     )
       .toTypedArray()
