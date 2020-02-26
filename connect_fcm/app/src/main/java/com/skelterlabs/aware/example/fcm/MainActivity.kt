@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.skelterlabs.aware.AIQAware
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.sdk27.coroutines.onClick
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     aiqAware = (application as FcmApp).aiqAware
     register.onClick {
       aiqAware.register()
+        .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doFinally { updateView() }
         .subscribe(
@@ -28,6 +30,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     }
     unregister.onClick {
       aiqAware.unregister()
+        .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .doFinally { updateView() }
         .subscribe(
