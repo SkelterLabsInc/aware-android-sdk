@@ -1,7 +1,6 @@
 package com.skelterlabs.aware.example.simple
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -11,6 +10,8 @@ import com.skelterlabs.aware.AIQAware
 import com.skelterlabs.aware.AIQAwareApp
 import com.skelterlabs.aware.AIQAwareException
 import kotlinx.android.synthetic.main.activity_main.*
+import org.json.JSONException
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -22,9 +23,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     aiqAware = AIQAwareApp.getInstance(application)
 
-    register.setOnClickListener(this)
-    unregister.setOnClickListener(this)
-    toggle_service_enabled.setOnClickListener(this)
+    register_button.setOnClickListener(this)
+    unregister_button.setOnClickListener(this)
+    toggle_service_button.setOnClickListener(this)
+    profile_button.setOnClickListener(this)
 
     requestPermission()
   }
@@ -36,7 +38,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
   override fun onClick(view: View) {
     when (view) {
-      register -> {
+      register_button -> {
         aiqAware.register(null, null, object : AIQAware.Callback<String> {
           override fun onSuccess(result: String) {
             showToast("AIQAware is registered")
@@ -50,7 +52,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         })
       }
 
-      unregister -> {
+      unregister_button -> {
         aiqAware.unregister(object : AIQAware.Callback<Unit> {
           override fun onSuccess(result: Unit) {
             showToast("AIQAware is unregistered")
@@ -64,9 +66,26 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         })
       }
 
-      toggle_service_enabled -> {
+      toggle_service_button -> {
         aiqAware.setEnableService(!aiqAware.isServiceEnabled())
         updateView()
+      }
+
+      profile_button -> {
+        aiqAware.getProfile(object : AIQAware.Callback<String> {
+          override fun onSuccess(result: String) {
+            try {
+              val json = JSONObject(result)
+              profile_label.text = json.toString(2)
+            } catch (e: JSONException) {
+              profile_label.text = e.toString()
+            }
+          }
+
+          override fun onError(e: AIQAwareException) {
+            profile_label.text = e.toString()
+          }
+        })
       }
     }
   }
@@ -76,28 +95,33 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
       return
     }
 
-    val permission = Manifest.permission.ACCESS_FINE_LOCATION
-    if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-      requestPermissions(arrayOf(permission), 1)
-    }
+    val permissions = listOf(
+      Manifest.permission.ACCESS_FINE_LOCATION,
+      Manifest.permission.ACCESS_WIFI_STATE,
+      Manifest.permission.BLUETOOTH,
+      Manifest.permission.CHANGE_WIFI_STATE
+    )
+    requestPermissions(permissions.toTypedArray(), 1)
   }
 
   private fun updateView() {
     if (aiqAware.isRegistered()) {
-      is_registered.text = getString(R.string.is_registered)
-      register.isEnabled = false
-      unregister.isEnabled = true
+      registered_label.text = getString(R.string.is_registered)
+      register_button.isEnabled = false
+      unregister_button.isEnabled = true
     } else {
-      is_registered.text = getString(R.string.is_not_registered)
-      register.isEnabled = true
-      unregister.isEnabled = false
+      registered_label.text = getString(R.string.is_not_registered)
+      register_button.isEnabled = true
+      unregister_button.isEnabled = false
     }
 
     if (aiqAware.isServiceEnabled()) {
-      is_service_enabled.text = getString(R.string.is_service_enabled)
+      service_enabled_label.text = getString(R.string.is_service_enabled)
     } else {
-      is_service_enabled.text = getString(R.string.is_service_disabled)
+      service_enabled_label.text = getString(R.string.is_service_disabled)
     }
+
+    profile_label.text = ""
   }
 
   private fun showToast(message: String) {

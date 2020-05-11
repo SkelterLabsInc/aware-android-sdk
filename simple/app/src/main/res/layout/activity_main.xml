@@ -1,56 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:orientation="vertical"
   tools:context=".MainActivity">
 
   <TextView
-    android:id="@+id/is_registered"
+    android:id="@+id/registered_label"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="@string/is_not_registered"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    android:text="@string/is_not_registered" />
 
   <Button
-    android:id="@+id/register"
+    android:id="@+id/register_button"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="@string/btn_register"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/is_registered" />
+    android:text="@string/btn_register" />
 
   <Button
-    android:id="@+id/unregister"
+    android:id="@+id/unregister_button"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="@string/btn_unregister"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/register" />
+    android:text="@string/btn_unregister" />
 
   <TextView
-    android:id="@+id/is_service_enabled"
+    android:id="@+id/service_enabled_label"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="30dp"
-    android:text="@string/is_service_disabled"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/unregister" />
+    android:text="@string/is_service_disabled" />
 
   <Button
-    android:id="@+id/toggle_service_enabled"
+    android:id="@+id/toggle_service_button"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="@string/btn_toggle_service"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/is_service_enabled" />
+    android:text="@string/btn_toggle_service" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+  <Button
+    android:id="@+id/profile_button"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="30dp"
+    android:text="@string/btn_show_profile" />
+
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+      android:id="@+id/profile_label"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="12dp"
+      android:textSize="10sp"
+      tools:ignore="SmallSp" />
+  </ScrollView>
+
+</LinearLayout>

@@ -8,4 +8,5 @@
   <string name="is_service_enabled" translatable="false">AIQAware collector service is enabled</string>
   <string name="is_service_disabled" translatable="false">AIQAware collector service is disabled</string>
   <string name="btn_toggle_service" translatable="false">Toggle service</string>
+  <string name="btn_show_profile">Show profile</string>
 </resources>

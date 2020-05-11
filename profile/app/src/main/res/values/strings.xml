@@ -1,6 +1,0 @@
-<resources>
-  <string name="app_name">Profile</string>
-
-  <!--Main Activity-->
-  <string name="profile_label">Show profile</string>
-</resources>
