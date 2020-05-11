@@ -2,10 +2,11 @@ package com.skelterlabs.aware.example.fcm
 
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.skelterlabs.aware.AIQAware
-import org.jetbrains.anko.toast
+import com.skelterlabs.aware.AIQAwareApp
 
 class FcmMessagingService : FirebaseMessagingService() {
 
@@ -13,22 +14,22 @@ class FcmMessagingService : FirebaseMessagingService() {
 
   override fun onCreate() {
     super.onCreate()
-    aiqAware = AIQAware.getInstance(application)
+    aiqAware = AIQAwareApp.getInstance(application)
   }
 
   override fun onMessageReceived(remoteMessage: RemoteMessage) {
     if (aiqAware.handleAiqAwareFcmMessage(remoteMessage)) {
-      toast("AWARE message handled")
+      showToast("AWARE message handled")
       return
     }
 
     // Handle client message.
-    toast("onMessageReceived")
+    showToast("onMessageReceived")
   }
 
-  private fun toast(message: String) {
+  private fun showToast(message: String) {
     Handler(Looper.getMainLooper()).post {
-      application.toast(message)
+      Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
   }
 }

@@ -1,22 +1,21 @@
 package com.skelterlabs.aware.example.fcm
 
-import android.app.Application
 import android.util.Log
+import androidx.multidex.MultiDexApplication
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
-import com.skelterlabs.aware.AIQAware
-import java.lang.RuntimeException
+import com.skelterlabs.aware.AIQAwareApp
 
-class FcmApp : Application() {
+class FcmApp : MultiDexApplication() {
 
-  private val TAG = "FcmApp"
-
-  lateinit var aiqAware: AIQAware
+  companion object {
+    private const val TAG = "FcmApp"
+  }
 
   override fun onCreate() {
     super.onCreate()
 
-    aiqAware = AIQAware.getInstance(this)
+    val aiqAware = AIQAwareApp.getInstance(this)
     if (!aiqAware.init()) {
       throw RuntimeException("API key is not set. Please set aware-client-config.json file.")
     }

@@ -1,48 +1,32 @@
 package com.skelterlabs.aware.example.fcm
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.skelterlabs.aware.AIQAware
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.skelterlabs.aware.AIQAwareApp
+import com.skelterlabs.aware.AIQAwareException
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.sdk27.coroutines.onClick
-import org.jetbrains.anko.toast
 
-class MainActivity : AppCompatActivity(), AnkoLogger {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
   private lateinit var aiqAware: AIQAware
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    aiqAware = (application as FcmApp).aiqAware
-    register.onClick {
-      aiqAware.register()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doFinally { updateView() }
-        .subscribe(
-          { toast("AIQAware is registered") },
-          { error -> toast("Error occur when registering: $error") }
-        )
-    }
-    unregister.onClick {
-      aiqAware.unregister()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doFinally { updateView() }
-        .subscribe(
-          { toast("AIQAware is unregistered") },
-          { error -> toast("Error occur when unregistering: $error") }
-        )
-    }
-    toggle_service_enabled.onClick {
-      aiqAware.serviceEnabled = !aiqAware.serviceEnabled
-      updateView()
-    }
-    updateView()
+
+    aiqAware = AIQAwareApp.getInstance(application)
+
+    register.setOnClickListener(this)
+    unregister.setOnClickListener(this)
+    toggle_service_enabled.setOnClickListener(this)
+
+    requestPermission()
   }
 
   override fun onResume() {
@@ -50,8 +34,56 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     updateView()
   }
 
+  override fun onClick(view: View) {
+    when (view) {
+      register -> {
+        aiqAware.register(null, null, object : AIQAware.Callback<String> {
+          override fun onSuccess(result: String) {
+            showToast("AIQAware is registered")
+            updateView()
+          }
+
+          override fun onError(e: AIQAwareException) {
+            showToast("Error occurred when registering: $e")
+            updateView()
+          }
+        })
+      }
+
+      unregister -> {
+        aiqAware.unregister(object : AIQAware.Callback<Unit> {
+          override fun onSuccess(result: Unit) {
+            showToast("AIQAware is unregistered")
+            updateView()
+          }
+
+          override fun onError(e: AIQAwareException) {
+            showToast("Error occurred when unregistering: $e")
+            updateView()
+          }
+        })
+      }
+
+      toggle_service_enabled -> {
+        aiqAware.setEnableService(!aiqAware.isServiceEnabled())
+        updateView()
+      }
+    }
+  }
+
+  private fun requestPermission() {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+      return
+    }
+
+    val permission = Manifest.permission.ACCESS_FINE_LOCATION
+    if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
+      requestPermissions(arrayOf(permission), 1)
+    }
+  }
+
   private fun updateView() {
-    if (aiqAware.registered) {
+    if (aiqAware.isRegistered()) {
       is_registered.text = getString(R.string.is_registered)
       register.isEnabled = false
       unregister.isEnabled = true
@@ -60,10 +92,15 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
       register.isEnabled = true
       unregister.isEnabled = false
     }
-    if (aiqAware.serviceEnabled) {
+
+    if (aiqAware.isServiceEnabled()) {
       is_service_enabled.text = getString(R.string.is_service_enabled)
     } else {
       is_service_enabled.text = getString(R.string.is_service_disabled)
     }
+  }
+
+  private fun showToast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
   }
 }
